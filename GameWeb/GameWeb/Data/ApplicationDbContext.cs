@@ -1,4 +1,4 @@
-﻿using GameWeb.Models;
+﻿using GameWeb.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

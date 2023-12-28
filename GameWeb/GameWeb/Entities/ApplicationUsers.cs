@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
-namespace GameWeb.Models;
+namespace GameWeb.Entities;
 
 public class ApplicationUsers : IdentityUser
 {

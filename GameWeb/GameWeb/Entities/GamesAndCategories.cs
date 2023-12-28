@@ -1,5 +1,5 @@
 ﻿
-namespace GameWeb.Models;
+namespace GameWeb.Entities;
 
 public class GamesAndCategories
 {

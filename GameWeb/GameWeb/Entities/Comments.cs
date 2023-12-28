@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GameWeb.Models;
+namespace GameWeb.Entities;
 
 public class Comments
 {
@@ -15,6 +15,7 @@ public class Comments
     // Foreign Key to Users
     public string UserId { get; set; } = string.Empty;
     public ApplicationUsers User { get; set; } = new ApplicationUsers();
+
     // Foreign Key to Games
     public int GameId { get; set; }
     public Games Game { get; set; } = new Games();

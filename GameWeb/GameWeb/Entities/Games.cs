@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 
-namespace GameWeb.Models;
+namespace GameWeb.Entities;
 
 public class Games
 {

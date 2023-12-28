@@ -1,5 +1,5 @@
 using GameWeb.Data;
-using GameWeb.Models;
+using GameWeb.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
