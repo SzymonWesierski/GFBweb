@@ -1,0 +1,44 @@
+﻿@model GameWeb.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+
+<div class="login-box">
+    <form method="post">
+
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+
+        <h1>Login</h1>
+        <div>
+            <label asp-for="UserName">User Name:</label>
+            <input type="text" asp-for="UserName" placeholder="User Name">
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="Password">Password:</label>
+            <input type="password" asp-for="Password" placeholder="Password">
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div>
+
+            <input type="checkbox" asp-for="RememberMe">
+            <label asp-for="RememberMe">Remember me?</label>
+
+        </div>
+
+        <div>
+            <a class="fyp" href="/forgot-password">Forgot your password?</a>
+        </div>
+
+        <div>
+            <input type="submit" value="Login">
+        </div>
+        <div>
+            <a href="/sign-up">Sign up if you don't have an account yet.</a>
+        </div>
+    </form>
+</div>
