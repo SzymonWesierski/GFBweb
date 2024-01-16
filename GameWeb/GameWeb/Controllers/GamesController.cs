@@ -10,6 +10,7 @@ using GameWeb.Models;
 using GameWeb.Entities;
 using Microsoft.Build.Framework;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 
 namespace GameWeb.Controllers;
 
@@ -17,10 +18,15 @@ namespace GameWeb.Controllers;
 public class GamesController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly IConfiguration _configuration;
 
-    public GamesController(ApplicationDbContext context)
+
+    public GamesController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
     {
         _context = context;
+        _webHostEnvironment = webHostEnvironment;
+        _configuration = configuration;
     }
 
     // GET: Games
@@ -39,14 +45,19 @@ public class GamesController : Controller
             return NotFound();
         }
 
-        var games = await _context.Games
+        var game = await _context.Games
+            .Include(t => t.GamesAndCategoriesList)
+            .ThenInclude(gc => gc.GameCategory)
             .FirstOrDefaultAsync(m => m.Id == id);
-        if (games == null)
+            
+        if (game == null)
         {
             return NotFound();
         }
 
-        return View(games);
+        game.CategoryList = game.GamesAndCategoriesList.Select(gc => gc.GameCategory).ToList();
+
+        return View(game);
     }
 
     // GET: Games/Create
@@ -72,6 +83,36 @@ public class GamesController : Controller
             viewModel.GamesCategories = await _context.GamesCategories.ToListAsync() ?? new List<GamesCategories>();
 
             return View(viewModel);
+        }
+
+        if (viewModel.ImageFile != null && viewModel.ImageFile.Length > 0)
+        {
+            // generating new uniqe file name 
+            var uniqueFileName = Guid.NewGuid().ToString() + "_" + viewModel.ImageFile.FileName;
+
+            var appDirectory = _webHostEnvironment.WebRootPath;
+
+            var imageDirectory = _configuration.GetSection("ImagesDirectorys").GetValue<string>("forGames");
+
+            if (imageDirectory == null || uniqueFileName == null)
+            {
+                // TODO logger should handle that error
+                ModelState.AddModelError("ImageFile", "Błąd ścieżki");
+                return View(viewModel);
+            }
+            else
+            {
+                // Save image on server
+                var filePath = Path.Combine(imageDirectory, uniqueFileName);
+
+                var physicalFilePath = appDirectory + filePath;
+
+                using (var fileStream = new FileStream(physicalFilePath, FileMode.Create))
+                {
+                    viewModel.ImageFile.CopyTo(fileStream);
+                }
+                viewModel.Game.MainImagePath = filePath;
+            }
         }
 
         _context.Add(viewModel.Game);
@@ -116,7 +157,7 @@ public class GamesController : Controller
             SelectedCategoryIds.Add(row.GameCategoryId);
         }
 
-        var viewModel = new GamesCreateViewModel()
+        var viewModel = new EditGameViewModel()
         {
             Game = game,
             GamesCategories = gamesCategories,
@@ -126,9 +167,10 @@ public class GamesController : Controller
         return View(viewModel);
     }
 
+    // POST: Games/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Id,Created,Title")] Games gameModel, [Bind("SelectedCategoryIds")] GamesCreateViewModel viewModel)
+    public async Task<IActionResult> Edit(int id, [Bind("Id,Created,Title,Description,ReleaseDate,MainImagePath")] Games gameModel, [Bind("SelectedCategoryIds, ImageFile")] EditGameViewModel viewModel)
     {
         viewModel.Game = gameModel;
 
@@ -155,6 +197,51 @@ public class GamesController : Controller
                 {
                     return NotFound();
                 }
+
+                var pathToExistingGameOldImage = existingGame.MainImagePath;
+
+               
+                // Handle image upload
+                if (viewModel.ImageFile != null && viewModel.ImageFile.Length > 0)
+                {
+                    // generating new uniqe file name 
+                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + viewModel.ImageFile.FileName;
+
+                    var appDirectory = _webHostEnvironment.WebRootPath;
+
+                    var imageDirectory = _configuration.GetSection("ImagesDirectorys").GetValue<string>("forGames");
+
+                    if (imageDirectory == null || uniqueFileName == null)
+                    {
+                        // TODO logger should handle that error
+                        ModelState.AddModelError("ImageFile", "Błąd ścieżki");
+                        return View(viewModel);
+                    }
+                    else
+                    {
+                        // Save image on server
+                        var filePath = Path.Combine(imageDirectory, uniqueFileName);
+
+                        var physicalFilePath = appDirectory + filePath;
+
+                        using (var fileStream = new FileStream(physicalFilePath, FileMode.Create))
+                        {
+                            viewModel.ImageFile.CopyTo(fileStream);
+                        }
+                        viewModel.Game.MainImagePath = filePath;
+                    }
+                }
+
+                //Remove old Image related to Game
+                if (!string.IsNullOrEmpty(pathToExistingGameOldImage))
+                {
+                    var pathToDeleteImage = _webHostEnvironment.WebRootPath + pathToExistingGameOldImage;
+                    if (System.IO.File.Exists(pathToDeleteImage))
+                    {
+                        System.IO.File.Delete(pathToDeleteImage);
+                    }
+                }
+                
 
                 // Update the Game (except relationships)
                 _context.Entry(existingGame).CurrentValues.SetValues(viewModel.Game);
@@ -197,7 +284,6 @@ public class GamesController : Controller
         }
 
         viewModel.GamesCategories = await _context.GamesCategories.ToListAsync() ?? new List<GamesCategories>();
-
         return View(viewModel);
     }
 
@@ -239,6 +325,13 @@ public class GamesController : Controller
         {
             // Remove associated records from the join table
             _context.GamesAndCategories.RemoveRange(gameFromDb.GamesAndCategoriesList);
+
+            //Remove Image related to Game
+            var pathToTaskImage = _webHostEnvironment.WebRootPath + gameFromDb.MainImagePath;
+            if (!string.IsNullOrEmpty(pathToTaskImage) && System.IO.File.Exists(pathToTaskImage))
+            {
+                System.IO.File.Delete(pathToTaskImage);
+            }
 
             // Remove the task
             _context.Games.Remove(gameFromDb);

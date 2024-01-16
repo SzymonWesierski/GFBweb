@@ -8,7 +8,6 @@ namespace GameWeb.Controllers;
 
 public class AccountsController : Controller
 {
-    private readonly ApplicationDbContext _context;
     private readonly SignInManager<ApplicationUsers> _signInManager;
     private readonly UserManager<ApplicationUsers> _userManager;
     private readonly IConfiguration _configuration;

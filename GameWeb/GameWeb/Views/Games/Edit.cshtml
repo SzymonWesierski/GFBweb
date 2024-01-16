@@ -1,25 +1,55 @@
-﻿@model GameWeb.Models.GamesCreateViewModel
+﻿@model GameWeb.Models.EditGameViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Game";
 }
 
-<h1>Edit</h1>
+<div class="container">
+    <div class="border p-3 mt-4">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
 
-<h4>Games</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit"  method="post">
+            <div class="row pb-2">
+                <h2 class="text-primary pl-3">Edit game</h2>
+            </div>
+
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <input type="hidden" asp-for="Game.Id" name="Id"/>
             <input type="hidden" asp-for="Game.Created" name="Created" />
-            <div class="form-group">
+            <input type="hidden" asp-for="Game.MainImagePath" name="MainImagePath" />
+
+            <div class="mb-3">
                 <label asp-for="Game.Title" class="control-label"></label>
                 <input asp-for="Game.Title" class="form-control" name="Title"/>
                 <span asp-validation-for="Game.Title" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <div class="mb-3">
+                Current image:
+                <div>
+                    <img src="@Url.Content(@Model.Game.MainImagePath)" class="card-img" alt="Game Image" style="width: 30%; height: auto;">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                Choose diffrent one, if you want:
+                <input type="file" accept="image/*" asp-for="ImageFile" class="form-control" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Game.Description" class="control-label"></label>
+                <textarea asp-for="Game.Description" class="form-control" name="Description"></textarea>
+                <span asp-validation-for="Game.Description" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Game.ReleaseDate" class="control-label"></label>
+                <input type="date" asp-for="Game.ReleaseDate" class="form-control" name="ReleaseDate" />
+                <span asp-validation-for="Game.ReleaseDate" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
                 Category:
                 <div class="form-control">
                     @foreach (var category in Model.GamesCategories)
@@ -33,16 +63,18 @@
                     <span asp-validation-for="SelectedCategoryIds" class="text-danger"></span>
                 </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+            <div class="mb-3">
+                <input type="submit" value="Save" class="btn btn-primary" />&nbsp;&nbsp;
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
             </div>
+
         </form>
+
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

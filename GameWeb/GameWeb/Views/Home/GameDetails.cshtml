@@ -1,0 +1,85 @@
+﻿@model GameWeb.Entities.Games
+
+@{
+    ViewData["Title"] = "Szczegóły gry: " + Model.Title;
+}
+
+<div class="container">
+    <h1>
+        <button class="btn btn-primary">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+                <i class="bi bi-arrow-90deg-left"></i>
+            </a>
+        </button>
+        &nbsp;&nbsp;@Model.Title
+    </h1>
+
+    </br>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <img src="@Url.Content(Model.MainImagePath)" class="img-fluid" alt="Game Image">
+        </div>
+        <div class="col-md-8">
+            <h3>Ocena: @Model.Rating</h3>
+            <h3>Opis:</h3>
+            <p>@Model.Description</p>
+
+            <h3>Data wydania:</h3>
+            <p>@Model.ReleaseDate.ToShortDateString()</p>
+
+            <h3>Kategorie:</h3>
+            @{
+                string categories = "";
+                @foreach (var category in Model.CategoryList)
+                {
+                    categories += category.CategoryName + ", ";
+                }
+                categories = categories.Substring(0, categories.Length - 2);
+            }
+            <p>@categories</p>
+
+            <h3>Na ile oceniasz ten tytuł:</h3>
+            <p>Twoja obecna ocena: NaN</p>
+            <div class="form-group">
+                <input type="range" min="1" max="10" value="@Model.Rating" class="custom-range" id="rating">
+                <span id="currentRating">@Model.Rating</span>
+            </div>
+            <button class="btn btn-primary" onclick="saveRating()">Zapisz ocenę</button>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h4>Dodaj komentarz:</h4>
+            <form>
+                <div class="form-group">
+                    <label for="commentText">Treść komentarza:</label>
+                    <textarea class="form-control" id="commentText" rows="3" placeholder="Wprowadź treść komentarza"></textarea>
+                </div>
+                </br>
+                <button type="submit" class="btn btn-primary">Dodaj komentarz</button>
+            </form>
+        </div>
+        <h3>Komentarze:</h3>
+        @foreach (var comment in Model.CommentsList)
+        {
+            <div class="card mb-2">
+                <div class="card-body">
+                    <h5 class="card-title">@comment.User.UserName</h5>
+                    <p class="card-text">@comment.Content</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- slider -->
+<script>
+    var ratingSlider = document.getElementById("rating");
+    var currentRating = document.getElementById("currentRating");
+
+    ratingSlider.addEventListener("input", function () {
+        currentRating.innerText = ratingSlider.value;
+    });
+</script>
