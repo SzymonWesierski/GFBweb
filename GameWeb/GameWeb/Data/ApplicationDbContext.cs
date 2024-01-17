@@ -14,6 +14,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUsers>
 
     public DbSet<Games> Games { get; set; }
     public DbSet<Comments> Comments { get; set; }
+    public DbSet<Ratings> Ratings { get; set; }
     public DbSet<GamesCategories> GamesCategories { get; set; }
     public DbSet<GamesAndCategories> GamesAndCategories { get; set; }
 
@@ -22,13 +23,23 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUsers>
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Comments>()
-                .HasOne(a => a.User)
-                .WithMany(u => u.CommentsList)
-                .HasForeignKey(a => a.UserId);
+            .HasOne(a => a.User)
+            .WithMany(u => u.CommentsList)
+            .HasForeignKey(a => a.UserId);
 
         modelBuilder.Entity<Comments>()
             .HasOne(a => a.Game)
             .WithMany(t => t.CommentsList)
+            .HasForeignKey(a => a.GameId);
+
+        modelBuilder.Entity<Ratings>()
+            .HasOne(a => a.User)
+            .WithMany(u => u.RatingsList)
+            .HasForeignKey(a => a.UserId);
+
+        modelBuilder.Entity<Ratings>()
+            .HasOne(a => a.Game)
+            .WithMany(t => t.RatingsList)
             .HasForeignKey(a => a.GameId);
 
         modelBuilder.Entity<Games>()

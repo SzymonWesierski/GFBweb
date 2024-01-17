@@ -1,7 +1,7 @@
-﻿@model GameWeb.Entities.Games
+﻿@model GameWeb.Models.DetailsGameViewModel
 
 @{
-    ViewData["Title"] = "Szczegóły gry: " + Model.Title;
+    ViewData["Title"] = "Szczegóły gry: " + Model.Game.Title;
 }
 
 <div class="container">
@@ -11,27 +11,27 @@
                 <i class="bi bi-arrow-90deg-left"></i>
             </a>
         </button>
-        &nbsp;&nbsp;@Model.Title
+        &nbsp;&nbsp;@Model.Game.Title
     </h1>
 
     </br>
     
     <div class="row">
         <div class="col-md-4">
-            <img src="@Url.Content(Model.MainImagePath)" class="img-fluid" alt="Game Image">
+            <img src="@Url.Content(Model.Game.MainImagePath)" class="img-fluid" alt="Game Image">
         </div>
         <div class="col-md-8">
-            <h3>Ocena: @Model.Rating</h3>
+            <h3>Ocena: @Math.Round(Model.Game.Rating,2)</h3>
             <h3>Opis:</h3>
-            <p>@Model.Description</p>
+            <p>@Model.Game.Description</p>
 
             <h3>Data wydania:</h3>
-            <p>@Model.ReleaseDate.ToShortDateString()</p>
+            <p>@Model.Game.ReleaseDate.ToShortDateString()</p>
 
             <h3>Kategorie:</h3>
             @{
                 string categories = "";
-                @foreach (var category in Model.CategoryList)
+                @foreach (var category in Model.Game.CategoryList)
                 {
                     categories += category.CategoryName + ", ";
                 }
@@ -40,12 +40,15 @@
             <p>@categories</p>
 
             <h3>Na ile oceniasz ten tytuł:</h3>
-            <p>Twoja obecna ocena: NaN</p>
-            <div class="form-group">
-                <input type="range" min="1" max="10" value="@Model.Rating" class="custom-range" id="rating">
-                <span id="currentRating">@Model.Rating</span>
-            </div>
-            <button class="btn btn-primary" onclick="saveRating()">Zapisz ocenę</button>
+            @if (@Model.Ratings.Value != 0)
+            {
+                <p>Twoja obecna ocena: @Model.Ratings.Value</p>
+            }
+            else
+            {
+                <p>Nie oceniłeś jeszcze tej gry : )</p>
+            }
+            @Html.Partial("_RatingForm", Model)
         </div>
     </div>
 
@@ -62,7 +65,7 @@
             </form>
         </div>
         <h3>Komentarze:</h3>
-        @foreach (var comment in Model.CommentsList)
+        @foreach (var comment in Model.Game.CommentsList)
         {
             <div class="card mb-2">
                 <div class="card-body">

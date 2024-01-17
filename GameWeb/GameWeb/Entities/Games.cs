@@ -17,6 +17,9 @@ public class Games
     public int TotalStars { get; set; } = 0;
     public double Rating { get; set; } = 0;
 
+    //Relation with Ratings
+    public ICollection<Ratings> RatingsList { get; set; } = new List<Ratings>();
+
     //Relation with Comments
     public ICollection<Comments> CommentsList { get; set; } = new List<Comments>();
     // Relation with GamesCategories
