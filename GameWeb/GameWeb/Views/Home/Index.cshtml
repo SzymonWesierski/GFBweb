@@ -20,7 +20,7 @@
                                 <h3 class="card-title">@position#</h3>
                             </div>
                             <div class="col-md-3">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="GameDetails" asp-route-id="@game.Id">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="GameDetails" asp-action="Index" asp-route-id="@game.Id">
                                     <img src="@Url.Content(game.MainImagePath)" class="card-img" alt="Game Image">
                                 </a>
                             </div>
@@ -33,7 +33,7 @@
                                         </div>
                                     </div>
                                     <h4 class="card-text text-center">
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="GameDetails" asp-route-id="@game.Id">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="GameDetails" asp-action="Index" asp-route-id="@game.Id">
                                             @game.Title
                                         </a>
                                     </h4>

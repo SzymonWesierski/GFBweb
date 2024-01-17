@@ -1,0 +1,30 @@
+﻿@model GameWeb.Models.EditAndDeleteCommentViewModel
+
+@{
+    ViewData["Title"] = "Edit Comment";
+}
+
+<div class="container">
+    <div class="border p-3 mt-4">
+
+        <h2 class="text-primary">Edit Comment</h2>
+
+        <hr />
+        <form asp-action="EditComment">
+
+            <input type="hidden" asp-for="CommentId" />
+            <input type="hidden" asp-for="GameId" />
+
+            <div class="mb-3">
+                Wprowadź nową treść:
+                <input asp-for="CommentContent" class="form-control"/>
+                <span asp-validation-for="CommentContent" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <input type="submit" value="Zapisz" class="btn btn-primary" />&nbsp;&nbsp;
+                <a asp-action="Index" asp-route-id = "@Model.GameId" class="btn btn-secondary">Wróć do gry</a>
+            </div>
+        </form>
+    </div>
+</div>

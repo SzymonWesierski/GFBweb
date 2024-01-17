@@ -1,0 +1,17 @@
+﻿@model GameWeb.Models.CommentFormPartialViewModel
+
+<h4>Dodaj komentarz:</h4>
+<form asp-action="_CommentFormPartial">
+    <div class="form-group">
+        <input hidden asp-for="GameId" />
+        <textarea asp-for="CommentContent" class="form-control" rows="3" placeholder="Wprowadź treść komentarza"></textarea>
+        @if (TempData["CommentError"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["CommentError"]
+            </div>
+        }
+    </div>
+    </br>
+    <button type="submit" class="btn btn-primary">Dodaj komentarz</button>
+</form>

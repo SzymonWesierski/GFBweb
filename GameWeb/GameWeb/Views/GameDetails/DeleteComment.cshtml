@@ -1,0 +1,25 @@
+﻿@model GameWeb.Models.EditAndDeleteCommentViewModel
+
+@{
+    ViewData["Title"] = "Delete Comment";
+}
+
+<div class="container">
+    <div class="border p-3 mt-4">
+        
+        <div class="mb-3">
+            <h3>Czy na prawdę chcesz usunąć ten komentarz ?</h3>
+        </div>
+        <div class="mb-3">
+            <p>@Model.CommentContent</p>
+        </div>
+        <div class="mb-3">
+            <form asp-action="DeleteComment">
+                <input type="hidden" asp-for="CommentId" />
+                <input type="hidden" asp-for="GameId" />
+                <input type="submit" value="Usuń" class="btn btn-danger" />&nbsp;&nbsp;
+                <a asp-action="Index" asp-route-id="@Model.GameId" class="btn btn-secondary">Wróć do gry</a>
+            </form>
+        </div>
+    </div>
+</div>

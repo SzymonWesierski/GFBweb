@@ -1,4 +1,9 @@
-﻿@model GameWeb.Models.DetailsGameViewModel
+﻿@using Microsoft.AspNetCore.Identity
+@using GameWeb.Entities
+@using System.Security.Claims
+
+@model GameWeb.Models.DetailsGameViewModel
+@inject SignInManager<ApplicationUsers> SignInManager
 
 @{
     ViewData["Title"] = "Szczegóły gry: " + Model.Game.Title;
@@ -40,37 +45,43 @@
             <p>@categories</p>
 
             <h3>Na ile oceniasz ten tytuł:</h3>
-            @if (@Model.Ratings.Value != 0)
+            @if (@Model.Rating.Value != 0)
             {
-                <p>Twoja obecna ocena: @Model.Ratings.Value</p>
+                <p>Twoja obecna ocena: @Model.Rating.Value</p>
             }
             else
             {
                 <p>Nie oceniłeś jeszcze tej gry : )</p>
             }
-            @Html.Partial("_RatingForm", Model)
+            @await Html.PartialAsync("_RatingFormPartial", new RatingFormPartialViewModel{GameId = Model.Game.Id, RatingValue = Model.Rating.Value})
         </div>
     </div>
 
     <div class="row mt-4">
         <div class="col-md-12">
-            <h4>Dodaj komentarz:</h4>
-            <form>
-                <div class="form-group">
-                    <label for="commentText">Treść komentarza:</label>
-                    <textarea class="form-control" id="commentText" rows="3" placeholder="Wprowadź treść komentarza"></textarea>
-                </div>
-                </br>
-                <button type="submit" class="btn btn-primary">Dodaj komentarz</button>
-            </form>
+            @await Html.PartialAsync("_CommentFormPartial", new CommentFormPartialViewModel{GameId = Model.Game.Id, CommentContent = String.Empty})
+            </br>
+            </br>
         </div>
+        
         <h3>Komentarze:</h3>
+        </br>
+        </br>
         @foreach (var comment in Model.Game.CommentsList)
         {
             <div class="card mb-2">
                 <div class="card-body">
                     <h5 class="card-title">@comment.User.UserName</h5>
                     <p class="card-text">@comment.Content</p>
+                    @if (User.Identity.IsAuthenticated && comment.User.Id == User.FindFirst(ClaimTypes.NameIdentifier)?.Value)
+                    {
+                        <a asp-action="EditComment" asp-route-id="@comment.Id" class="btn btn-primary mx-2">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a asp-action="DeleteComment" asp-route-id="@comment.Id" class="btn btn-danger mx-2">
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
+                    }
                 </div>
             </div>
         }

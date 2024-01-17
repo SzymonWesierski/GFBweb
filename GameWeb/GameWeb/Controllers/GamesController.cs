@@ -170,7 +170,7 @@ public class GamesController : Controller
     // POST: Games/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Id,Created,Title,Description,ReleaseDate,MainImagePath")] Games gameModel, [Bind("SelectedCategoryIds, ImageFile")] EditGameViewModel viewModel)
+    public async Task<IActionResult> Edit(int id, [Bind("Id,Created,Title,Description,ReleaseDate,MainImagePath,NumberOfVotes,TotalStars,Rating")] Games gameModel, [Bind("SelectedCategoryIds, ImageFile")] EditGameViewModel viewModel)
     {
         viewModel.Game = gameModel;
 
@@ -230,18 +230,17 @@ public class GamesController : Controller
                         }
                         viewModel.Game.MainImagePath = filePath;
                     }
-                }
 
-                //Remove old Image related to Game
-                if (!string.IsNullOrEmpty(pathToExistingGameOldImage))
-                {
-                    var pathToDeleteImage = _webHostEnvironment.WebRootPath + pathToExistingGameOldImage;
-                    if (System.IO.File.Exists(pathToDeleteImage))
+                    //Remove old Image related to Game
+                    if (!string.IsNullOrEmpty(pathToExistingGameOldImage))
                     {
-                        System.IO.File.Delete(pathToDeleteImage);
+                        var pathToDeleteImage = _webHostEnvironment.WebRootPath + pathToExistingGameOldImage;
+                        if (System.IO.File.Exists(pathToDeleteImage))
+                        {
+                            System.IO.File.Delete(pathToDeleteImage);
+                        }
                     }
                 }
-                
 
                 // Update the Game (except relationships)
                 _context.Entry(existingGame).CurrentValues.SetValues(viewModel.Game);

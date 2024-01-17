@@ -1,0 +1,13 @@
+﻿@model GameWeb.Models.RatingFormPartialViewModel
+
+
+<form asp-action="_RatingFormPartial" method="post">
+    <input hidden asp-for="GameId" />
+    <div class="form-group">
+        <input asp-for="RatingValue" type="range" min="1" max="10" class="custom-range" id="rating">
+        <span asp-validation-for="RatingValue" class="text-danger"></span>
+        <span id="currentRating"></span>
+    </div>
+    <button class="btn btn-primary" type="submit">Zapisz ocenę</button>
+</form>
+
