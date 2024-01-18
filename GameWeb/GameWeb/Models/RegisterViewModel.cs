@@ -3,16 +3,16 @@
 namespace GameWeb.Models;
 public class RegisterViewModel
 {
-    [Required]
+    [Required(ErrorMessage = "Podaj e-mail")]
     [DataType(DataType.EmailAddress)]
     public string Email { get; set; }
-    [Required]
+    [Required(ErrorMessage = "Podaj nazwę użytkownika")]
     public string UserName { get; set; }
-    [Required]
+    [Required(ErrorMessage = "Podaj hasło")]
     [DataType(DataType.Password)]
     public string Password { get; set; }
-    [Required]
+    [Required(ErrorMessage = "Podaj hasło")]
     [DataType(DataType.Password)]
-    [Compare(nameof(Password), ErrorMessage = "Password and confirmation password did not match")]
+    [Compare(nameof(Password), ErrorMessage = "Hasło i potwierdź hasło muszą być identyczne")]
     public string ConfirmPassword { get; set; }
 }

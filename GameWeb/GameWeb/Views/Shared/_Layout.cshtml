@@ -17,51 +17,61 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">GameWeb</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                @{
+                    bool isUserSignIn = SignInManager.IsSignedIn(User);
+                }
+                @if (isUserSignIn)
+                {
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">GameWeb</a>
+                }
+                else
+                {
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="IndexGuest">GameWeb</a>
+                }
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                    @if (SignInManager.IsSignedIn(User))
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    
+                    @if (isUserSignIn)
                     {
-                        <li class="nav-item">
-                            <a id="manage" class="nav-link text-dark">Hello @UserManager.GetUserName(User)!</a>
-                        </li>
-                        <li class="nav-item">
-                            <form id="logoutForm" class="form-inline" asp-controller="Accounts" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
-                            </form>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Games" asp-action="Index">Games CRUD</a>
-                        </li>
-                        <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="GamesCategories" asp-action="Index">Games category CRUD</a>
-                        </li>
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Ranking gier</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Games" asp-action="Index">Games CRUD</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="GamesCategories" asp-action="Index">Games category CRUD</a>
+                            </li>
+                        </ul>
+                        <span class="navbar-text">
+                            Hello @UserManager.GetUserName(User)!
+                        </span>
+                        <form id="logoutForm" class="form-inline ms-2" asp-controller="Accounts" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                            <button id="logout" type="submit" class="btn btn-outline-danger"><i class="bi bi-power"></i></button>
+                        </form>
                     }
                     else
                     {
-                        <li class="nav-item">
-                                <a class="nav-link text-dark" id="register" asp-controller="Accounts" asp-action="Register">Register</a>
-                        </li>
-                        <li class="nav-item">
-                                <a class="nav-link text-dark" id="login" asp-controller="Accounts" asp-action="Login">Login</a>
-                        </li>
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" id="register" asp-controller="Accounts" asp-action="Register">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="login" asp-controller="Accounts" asp-action="Login">Login</a>
+                            </li>
+                        </ul>
                     }
-                    </ul>
                 </div>
             </div>
         </nav>
+
     </header>
     <div class="container">
         <main role="main" class="pb-3">

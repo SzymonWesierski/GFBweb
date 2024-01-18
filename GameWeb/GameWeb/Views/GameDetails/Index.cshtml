@@ -9,42 +9,25 @@
     ViewData["Title"] = "Szczegóły gry: " + Model.Game.Title;
 }
 
-<div class="container">
-    <h1>
+<div class="container mt-5">
+    <div class="bg-light p-5 rounded shadow">
+        <h1 class="mb-4">
         <button class="btn btn-primary">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">
                 <i class="bi bi-arrow-90deg-left"></i>
             </a>
         </button>
         &nbsp;&nbsp;@Model.Game.Title
     </h1>
 
-    </br>
-    
-    <div class="row">
-        <div class="col-md-4">
-            <img src="@Url.Content(Model.Game.MainImagePath)" class="img-fluid" alt="Game Image">
+    <div class="row justify-content-between">
+        <div class="col-md-5">
+                <img src="@Url.Content(Model.Game.MainImagePath)" class="img-fluid" alt="Game Image" style="height: 500px; width: auto; object-fit: cover;">
         </div>
-        <div class="col-md-8">
-            <h3>Ocena: @Math.Round(Model.Game.Rating,2)</h3>
-            <h3>Opis:</h3>
-            <p>@Model.Game.Description</p>
 
-            <h3>Data wydania:</h3>
-            <p>@Model.Game.ReleaseDate.ToShortDateString()</p>
-
-            <h3>Kategorie:</h3>
-            @{
-                string categories = "";
-                @foreach (var category in Model.Game.CategoryList)
-                {
-                    categories += category.CategoryName + ", ";
-                }
-                categories = categories.Substring(0, categories.Length - 2);
-            }
-            <p>@categories</p>
-
-            <h3>Na ile oceniasz ten tytuł:</h3>
+        <div class="col-md-5" >
+            <h3 class="mt-3">Ocena: @Math.Round(Model.Game.Rating,2)</h3>
+            <h3 class="mt-3">Na ile oceniasz ten tytuł:</h3>
             @if (@Model.Rating.Value != 0)
             {
                 <p>Twoja obecna ocena: @Model.Rating.Value</p>
@@ -57,16 +40,31 @@
         </div>
     </div>
 
+    <div class="col-md-8 p-4 w-100">
+        <h3>Opis:</h3>
+        <p>@Model.Game.Description</p>
+
+        <h3>Data wydania:</h3>
+        <p>@Model.Game.ReleaseDate.ToShortDateString()</p>
+
+        <h3>Kategorie:</h3>
+        @{
+            string categories = "";
+            @foreach (var category in Model.Game.CategoryList)
+            {
+                categories += category.CategoryName + ", ";
+            }
+            categories = categories.Substring(0, categories.Length - 2);
+        }
+        <p>@categories</p>
+    </div>
+
     <div class="row mt-4">
         <div class="col-md-12">
             @await Html.PartialAsync("_CommentFormPartial", new CommentFormPartialViewModel{GameId = Model.Game.Id, CommentContent = String.Empty})
-            </br>
-            </br>
         </div>
         
-        <h3>Komentarze:</h3>
-        </br>
-        </br>
+        <h3 class="mt-4">Komentarze:</h3>
         @foreach (var comment in Model.Game.CommentsList)
         {
             <div class="card mb-2">
@@ -85,6 +83,7 @@
                 </div>
             </div>
         }
+    </div>
     </div>
 </div>
 

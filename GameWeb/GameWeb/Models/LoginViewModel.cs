@@ -4,9 +4,9 @@ namespace GameWeb.Models;
 
 public class LoginViewModel
 {
-    [Required]
+    [Required(ErrorMessage ="Podaj nazwę użytkownika")]
     public string UserName { get; set; }
-    [Required]
+    [Required(ErrorMessage = "Podaj hasło")]
     [DataType(DataType.Password)]
     public string Password { get; set; }
     public bool RememberMe { get; set; }

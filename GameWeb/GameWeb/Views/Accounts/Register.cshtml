@@ -4,38 +4,33 @@
 }
 
 
-<div class="register-box">
-    <div>
-        <div>
-            <h1>Register</h1>
-
-            <form method="post">
-                <div>
-                    <label>User name</label>
-                    <input type="text" asp-for="UserName" />
-                    <span asp-validation-for="UserName" class="text-danger"></span>
-                </div>
-                <div>
-                    <label>Email Address</label>
-                    <input type="email" asp-for="Email" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-                <div>
-                    <label>Password</label>
-                    <input type="password" asp-for="Password" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-                <div>
-                    <label>Confirm password</label>
-                    <input type="password" asp-for="ConfirmPassword" />
-                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                </div>
-                <div>
-                    <input type="submit" value="Register">
-                </div>
-            </form>
+<div class="register-box container mt-5">
+    <form method="post" class="bg-light p-5 rounded shadow">
+        <h1 class="mb-4">Register</h1>
+        <div class="mb-3">
+            <label class="form-label">Nazwa użytkownika</label>
+            <input type="text" asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
         </div>
-    </div>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Hasło</label>
+            <input type="password" asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Potwierdź hasło</label>
+            <input type="password" asp-for="ConfirmPassword" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <input type="submit" value="Zarejestruj się" class="btn btn-primary">
+        </div>
+    </form>
 </div>
 
 
